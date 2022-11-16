@@ -1,0 +1,213 @@
+<!-- Html body for testing purposes to simulate a page with an ad container as well as padding to be able to scroll the page and initate that functionality-->
+
+<body>
+    <div id="div-id-for-pushdown">
+        <header id="trd-header">
+            
+        </header>
+    </div>
+    <div class="fat-div" style="padding-bottom: 1200px">
+
+    </div>
+  </body>
+
+<!-- End html body test area, remove for production deployment -->
+
+<script >
+    function TRDadvertisement( options ){
+  els = {
+  mainDocument: window.top.document,
+  mainWindow: window.parent.top.window,
+  scrolled:false,
+  }
+  creativeParams = {
+  clickThroughURL: '[%clickThroughURL%]',
+  imageSrc:'[%ImageSrc%]',
+  imageSrc2:'[%ImageSrc2%]',
+  logoSrc:'[%logo%]',
+  buttonColor:'[%buttonColor%]',
+  topHeading:'[%topHeading%]',
+  buttonText:'[%buttonText%]',
+  topHeadingColor:'[%topHeadingColor%]',
+  impressionTrackers: [
+    '[%ImpressionTracker1%]',
+    '[%ImpressionTracker2%]',
+    '[%ImpressionTracker3%]'
+  ],
+  logoPosition:'[%logoPosition%]',
+  CTAPosition:'[%CTAPosition%]',
+  testBaseImg: "https://via.placeholder.com/1900x400?text=1900x400+BaseImg",
+  testScrolledImg: "https://via.placeholder.com/1900x100?text=1900x100+ScrolledImg",
+  }
+
+  fn = {
+  
+  init(){
+  
+    let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+    let position = els.mainWindow.scrollY;
+    console.log(`position is : ${position}`);
+
+
+    // NEEDS TESTING
+     if(window.scrollY == 0){
+       fn.insertHtmlElement(creativeParams.imageSrc);
+    }else{
+      fn.insertHtmlScrolledElement(creativeParams.imageSrc2)
+    }
+
+    let trdHeader = els.mainDocument.querySelector("#trd-header");
+     console.log(trdHeader);
+     //trdHeader.classList.add("header-billboard");
+    //else{
+    //  fn.insertScrolledHtmlElement(creativeParams.imageSrc2);
+    //}
+    els.mainWindow.addEventListener('scroll',fn.scrollChange);
+    els.mainWindow.imageSrc = creativeParams.imageSrc;
+    els.mainWindow.imageSrc2 = creativeParams.imageSrc2;
+  
+  
+    //fn.attachTrackers();
+  },
+  
+      createHtmlElement(image){
+        let adWrapper  = document.createElement("div");
+        let adImg      = document.createElement("img");
+        let adImgClick = document.createElement("a");
+        adWrapper.classList.add('static-intermission');
+        adImg.classList.add('intermission-image');
+
+
+        let advertisement = `    
+            <div class="ad-image-container"> 
+                <img  class="ad-background-image"src=${creativeParams.testBaseImg} alt="background"/>
+                <div class="banner">
+                <a href="${creativeParams.clickThroughURL}" class="ad-button">
+                    <button class="vt">${creativeParams.buttomMessage}</button>
+                </a>
+                </div>
+                <img  class="ad-logo" src=${creativeParams.logoSrc} alt="background"/>
+            </div>`;
+        adWrapper.innerHTML=advertisement;
+        return adWrapper;
+      },
+
+
+      insertHtmlElement(image){
+        let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+        let placeholder = container.firstElementChild;
+        let advertisement = fn.createHtmlElement(image);
+        let style = fn.constructStyleSheet();
+          container.replaceChild(advertisement, placeholder);
+        container.appendChild(style);
+      },
+
+
+      insertHtmlScrolledElement(creative){
+        let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+        let placeholder = container.firstElementChild;
+        let advertisement  = document.createElement("div");
+        let adImg      = document.createElement("img");
+        let adImgClick = document.createElement("a");
+        advertisement.classList.add('static-intermission');
+        adImg.classList.add('intermission-image');
+
+
+        let billboard = `    
+        <div class="ad-image-container"> 
+          <img  class="ad-background-image collapsedImage"src=${creativeParams.testScrolledImg} alt="background"/>
+          <div class="banner">
+            <a href="${creativeParams.clickThroughURL}" class="ad-button collapsedButton">
+              <button class="vt">${creativeParams.buttomMessage}</button>
+            </a>
+          </div>
+          <img  class="ad-logo collapsedLogo" src=${creativeParams.logoSrc} alt="background"/>
+        </div>`;
+        advertisement.innerHTML=billboard;
+
+        let style = fn.constructStyleSheet();
+        container.replaceChild(advertisement, placeholder);
+        container.appendChild(style);
+        container.classList.add("scrollFixed");
+      },
+
+
+      attachTrackers(){
+        let staticIntermission = els.mainDocument.querySelector('.static-intermission');
+        for (let i = 0; i < creativeParams.impressionTrackers.length; i++) {
+          let tracker = creativeParams.impressionTrackers[i];
+          if (tracker) {
+            let impression = document.createElement('img');
+            tracker = tracker.split('\n').join('').split(' ').join('');
+            impression.src = "%%VIEW_URL_UNESC%%" + tracker;
+            impression.classList.add('impression');
+            staticIntermission.appendChild(impression);
+          }
+        }
+      },
+
+
+      constructStyleSheet() {
+        var styleSheet = document.createElement('style');
+        styleSheet.innerHTML =` 
+        .scrollFixed {position: fixed;top: 0;margin: 0;z-index: 100;}
+        .trd-ad-leaderboard{min-height:125px !important;}
+        .trd-header {top: 250px; z-index:2000}
+        .collapsedImage {height: 125px !important;}
+        .bigMessageDisplay {display: none;}
+        .collapsedButton {top: calc(50% - 23px) !important;}
+        .collapsedLogo {top: 0 !important;${creativeParams.logoPosition}: calc(100% - 125px) !important;}
+        .ad-background-image {width: 100%;height:400px;}
+        .ad-image-container {position: relative;overflow: hidden;}
+        .big-message {color: #fff;font-size: 2.7vw;margin-left: 10%;margin-right: 10%;text-align: left;line-height: 50px;}
+        .banner {position: absolute;width: 400px;height: 100%;top: 0;${creativeParams.CTAPosition}:calc(100% - 400px);}
+        .ad-button {position: absolute;top: 75%;left: 10%}
+        .vt {z-index: 100;background-color: #00f;border: none;text-decoration: none;color: #fff;font-size: 30px;font-weight: 700;min-width: 300px;min-height: 45px;text-align: center;
+            border-radius: 12px;font-family: Georgia, 'Times New Roman', Times, serif;}
+        .ad-logo {position: absolute;width: 125px;height: 125px;top: 5%; ${creativeParams.logoPosition}: calc(98% - 125px);}
+        @keyframes slideInFromLeft {0% {transform: translateX(-100%);opacity: 0;}
+        100% {transform: translateX(0);opacity: 1;}}
+        @keyframes slideInFromRight {0% {transform: translateX(100%);opacity: 0;}100% {transform: translateX(0);opacity: 1;}}
+        @keyframes imageShowUp {0% {opacity: 0;}100% {opacity: 1;}}
+        @media screen and (max-width:500px){.vt{font-size:20px;min-width:150px;min-height:30px;}.ad-button{left:2%;}}
+        .header-billboard{position:absolute!important;top:400px;left:0;right:0;}`;
+        return styleSheet;
+      },
+
+
+      scrollChange(){
+        let distance = window.scrollY;
+        console.log(distance);
+
+  
+        if(distance>200 && els.scrolled){
+          fn.insertHtmlScrolledElement(creativeParams.testScrolledImg);
+          let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+          let button = els.mainDocument.querySelector(".ad-button");
+          let logo = els.mainDocument.querySelector(".ad-logo");
+          button.classList.add("collapsedButton");
+          logo.classList.add("collapsedLogo");
+          container.classList.add("scrollFixed");
+          els.scrolled=false;
+        }if(distance==0 && !els.scrolled){
+          fn.insertHtmlElement(creativeParams.imageSrc);
+          let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+          let button = els.mainDocument.querySelector(".ad-button");
+          let logo = els.mainDocument.querySelector(".ad-logo");
+          logo.classList.remove("collapsedLogo");
+          button.classList.remove("collapsedButton");
+          container.classList.remove("scrollFixed");
+  
+          els.scrolled=true;
+        }
+      }
+    }
+  
+
+    fn.init();
+  };
+  
+  
+  window.trd_out_stream = new TRDadvertisement();
+    
+    </script>
