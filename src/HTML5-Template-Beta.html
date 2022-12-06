@@ -44,7 +44,7 @@
     
       init(){
       
-        let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+        let container = els.mainDocument.querySelector("#pushdown");
         let position = els.mainWindow.scrollY;
         console.log(`position is : ${position}`);
 
@@ -95,7 +95,7 @@
 
 
       insertHtmlElement(image){
-        let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+        let container = els.mainDocument.querySelector("#pushdown");
         let placeholder = container.firstElementChild;
         let advertisement = fn.createHtmlElement(image);
         let style = fn.constructStyleSheet();
@@ -105,7 +105,7 @@
 
 
       insertHtmlScrolledElement(creative){
-        let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+        let container = els.mainDocument.querySelector("#pushdown");
         let placeholder = container.firstElementChild;
         let advertisement  = document.createElement("div");
         let adImg      = document.createElement("img");
@@ -183,7 +183,7 @@
 
         if(distance>200 && els.scrolled){
           fn.insertHtmlScrolledElement(creativeParams.testScrolledImg);
-          let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+          let container = els.mainDocument.querySelector("#pushdown");
           let button = els.mainDocument.querySelector(".ad-button");
           let logo = els.mainDocument.querySelector(".ad-logo");
           button.classList.add("collapsedButton");
@@ -192,7 +192,7 @@
           els.scrolled=false;
         }if(distance==0 && !els.scrolled){
           fn.insertHtmlElement(creativeParams.testBaseImg);
-          let container = els.mainDocument.querySelector("#div-id-for-pushdown");
+          let container = els.mainDocument.querySelector("#pushdown");
           let button = els.mainDocument.querySelector(".ad-button");
           let logo = els.mainDocument.querySelector(".ad-logo");
           logo.classList.remove("collapsedLogo");
