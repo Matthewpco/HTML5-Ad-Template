@@ -1,38 +1,37 @@
 <!-- Html body for testing purposes to simulate a page with an ad container as well as padding to be able to scroll the page and initate that functionality-->
 
-<body style="margin: 0; padding: 0;">
+<body style="margin: 0; padding: 0">
   <div id="pushdown">
-    <header id="trd-header">
-
-    </header>
+    <header id="trd-header"></header>
   </div>
-  <div class="fat-div" style="padding-bottom: 1200px; background-color: #efefef">
-
-  </div>
+  <div
+    class="fat-div"
+    style="padding-bottom: 1200px; background-color: #efefef"
+  ></div>
 </body>
 
 <!-- End html body test area, remove for production deployment -->
 
-<script >
-  function TRDadvertisement( options ) {
+<script>
+  function TRDadvertisement(options) {
     els = {
       mainDocument: window.top.document,
       mainWindow: window.parent.top.window,
-      scrolled:false,
-    }
+      scrolled: false,
+    };
     creativeParams = {
-      clickThroughURL: '[%clickThroughURL%]',
-      imageSrc:'[%ImageSrc%]',
-      imageSrc2:'[%ImageSrc2%]',
-      logoSrc:'[%logo%]',
-      buttonColor:'[%buttonColor%]',
-      topHeading:'[%topHeading%]',
-      buttonText:'[%buttonText%]',
-      topHeadingColor:'[%topHeadingColor%]',
+      clickThroughURL: "[%clickThroughURL%]",
+      imageSrc: "[%ImageSrc%]",
+      imageSrc2: "[%ImageSrc2%]",
+      logoSrc: "[%logo%]",
+      buttonColor: "[%buttonColor%]",
+      topHeading: "[%topHeading%]",
+      buttonText: "[%buttonText%]",
+      topHeadingColor: "[%topHeadingColor%]",
       impressionTrackers: [
-        '[%ImpressionTracker1%]',
-        '[%ImpressionTracker2%]',
-        '[%ImpressionTracker3%]'
+        "[%ImpressionTracker1%]",
+        "[%ImpressionTracker2%]",
+        "[%ImpressionTracker3%]",
       ],
       // Test params, replace with values above for build.
       testclickThroughURL: "https://preview.therealdeal.com/",
@@ -44,50 +43,39 @@
       testtopHeading: "TopHeadingTestText",
       testbuttonText: "ButtonTestText",
       testtopHeadingColor: "black",
-    }
+    };
 
     fn = {
-    
-      init(){
-      
+      init() {
         let container = els.mainDocument.querySelector("#pushdown");
         let position = els.mainWindow.scrollY;
         console.log(`position is : ${position}`);
+        let style = fn.constructStyleSheet();
+        container.appendChild(style);
 
-
-        // TODO needs further testing several bugs currently exist
-        if(position == 0){
+        // TODO needs further testing several bugs currently exist NOTE Scroll functionality appears to be setup on new preview site.
+        if (position == 0) {
           fn.insertHtmlElement(creativeParams.testBaseImg);
-        }else{
-          fn.insertHtmlScrolledElement(creativeParams.testScrolledImg)
+        } else {
+          fn.insertHtmlScrolledElement(creativeParams.testScrolledImg);
         }
 
         let trdHeader = els.mainDocument.querySelector("#trd-header");
+        els.mainWindow.addEventListener("scroll", fn.scrollChange);
 
-        // Leftover code from original template delete later
-        //trdHeader.classList.add("header-billboard");
-        //else{
-        //  fn.insertScrolledHtmlElement(creativeParams.imageSrc2);
-        //}
-        els.mainWindow.addEventListener('scroll',fn.scrollChange);
-        els.mainWindow.imageSrc = creativeParams.imageSrc;
-        els.mainWindow.imageSrc2 = creativeParams.imageSrc2;
-      
         // Commented out for development
         //fn.attachTrackers();
       },
-    
-      createHtmlElement(image){
-        let adWrapper  = document.createElement("div");
-        let adImg      = document.createElement("img");
+
+      createHtmlElement(image) {
+        let adWrapper = document.createElement("div");
+        let adImg = document.createElement("img");
         let adImgClick = document.createElement("a");
-        adWrapper.classList.add('static-intermission');
-        adImg.classList.add('intermission-image');
-
-
+        adWrapper.classList.add("static-intermission");
+        adImg.classList.add("intermission-image");
         let advertisement = `    
-            <div class="ad-image-container full-section"> 
-                <img  class="ad-background-image one-fifth-section "src=${creativeParams.testlogoSrc} alt="background"/>
+            <div class="full-section"> 
+                <img  class="one-fifth-section "src=${creativeParams.testlogoSrc} alt="background"/>
                 <div class="three-fifth-section">
                   <h2>${creativeParams.testtopHeading}</h2>
                   <a href="${creativeParams.testclickThroughURL}" class="">
@@ -96,64 +84,83 @@
                 </div>
                 <img  class="one-fifth-section" src=${creativeParams.testlogoSrc} alt="background"/>
             </div>`;
-        adWrapper.innerHTML=advertisement;
+        adWrapper.innerHTML = advertisement;
         return adWrapper;
       },
 
-
-      insertHtmlElement(image){
+      insertHtmlElement(image) {
         let container = els.mainDocument.querySelector("#pushdown");
         let placeholder = container.firstElementChild;
         let advertisement = fn.createHtmlElement(image);
-        let style = fn.constructStyleSheet();
-          container.replaceChild(advertisement, placeholder);
-        container.appendChild(style);
+        container.replaceChild(advertisement, placeholder);
       },
 
-
-      insertHtmlScrolledElement(creative){
+      insertHtmlScrolledElement(creative) {
         let container = els.mainDocument.querySelector("#pushdown");
         let placeholder = container.firstElementChild;
-        let advertisement  = document.createElement("div");
-        let adImg      = document.createElement("img");
+        let advertisement = document.createElement("div");
+        let adImg = document.createElement("img");
         let adImgClick = document.createElement("a");
-        advertisement.classList.add('static-intermission');
-        adImg.classList.add('intermission-image');
-
+        advertisement.classList.add("static-intermission");
+        adImg.classList.add("intermission-image");
 
         let billboard = `    
-        <div class="ad-image-container full-section-scr"> 
-          <img  class="ad-background-image one-fifth-section"src=${creativeParams.testlogoSrc} alt="background"/>
+        <div class="full-section-scr"> 
+          <img  class="one-fifth-section"src=${creativeParams.testlogoSrc} alt="background"/>
           <div class="three-fifth-section">
             <a href="${creativeParams.testclickThroughURL}" class=" ">
               <button class="">${creativeParams.testbuttonText}</button>
             </a>
           </div>
-          <img  class=" one-fifth-section" src=${creativeParams.testlogoSrc} alt="background"/>
+          <img  class="one-fifth-section" src=${creativeParams.testlogoSrc} alt="background"/>
         </div>`;
-        advertisement.innerHTML=billboard;
+        advertisement.innerHTML = billboard;
 
-        let style = fn.constructStyleSheet();
         container.replaceChild(advertisement, placeholder);
-        container.appendChild(style);
         container.classList.add("scrollFixed");
       },
 
-
-      attachTrackers(){
-        let staticIntermission = els.mainDocument.querySelector('.static-intermission');
+      attachTrackers() {
+        let staticIntermission = els.mainDocument.querySelector(
+          ".static-intermission"
+        );
         for (let i = 0; i < creativeParams.impressionTrackers.length; i++) {
           let tracker = creativeParams.impressionTrackers[i];
           if (tracker) {
-            let impression = document.createElement('img');
-            tracker = tracker.split('\n').join('').split(' ').join('');
+            let impression = document.createElement("img");
+            tracker = tracker.split("\n").join("").split(" ").join("");
             impression.src = "%%VIEW_URL_UNESC%%" + tracker;
-            impression.classList.add('impression');
+            impression.classList.add("impression");
             staticIntermission.appendChild(impression);
           }
         }
       },
 
+      scrollChange() {
+        let distance = window.scrollY;
+        console.log(distance);
+
+        if (distance > 200 && els.scrolled) {
+          fn.insertHtmlScrolledElement(creativeParams.testScrolledImg);
+          let container = els.mainDocument.querySelector("#pushdown");
+          //let button = els.mainDocument.querySelector(".ad-button");
+          //let logo = els.mainDocument.querySelector(".ad-logo");
+          //button.classList.add("collapsedButton");
+          //logo.classList.add("collapsedLogo");
+          container.classList.add("scrollFixed");
+          els.scrolled = false;
+        }
+        if (distance == 0 && !els.scrolled) {
+          fn.insertHtmlElement(creativeParams.testBaseImg);
+          let container = els.mainDocument.querySelector("#pushdown");
+          //let button = els.mainDocument.querySelector(".ad-button");
+          //let logo = els.mainDocument.querySelector(".ad-logo");
+          //logo.classList.remove("collapsedLogo");
+          //button.classList.remove("collapsedButton");
+          container.classList.remove("scrollFixed");
+          els.scrolled = true;
+        }
+      },
 
       constructStyleSheet() {
         var styleSheet = document.createElement("style");
@@ -164,14 +171,12 @@
           background-image: url(${creativeParams.testbaseImg});
           max-height: 400px;
         }
-
         .full-section-scr {
           width:100%!important;
           display: flex!important;
           background-image: url(${creativeParams.testscrolledImg});
           max-height: 100px;
         }
-
         .one-fifth-section {
           display: flex!important;
           width: 20%!important;
@@ -189,59 +194,6 @@
           margin: 0;
           z-index: 100;
         }
-        .trd-ad-leaderboard {
-          min-height:125px !important;
-        }
-        .trd-header {
-          top: 250px;
-           z-index:2000;
-          }
-        .collapsedImage {
-          height: 125px !important;
-        }
-        .bigMessageDisplay {
-          display: none;
-        }
-        .collapsedButton {
-          top: calc(50% - 23px) !important;
-        }
-        .collapsedLogo {
-          top: 0 !important;
-        }
-        .ad-background-image {
-          width: 100%;
-          height:400px;
-        }
-        .ad-image-container {
-          position: relative;
-          overflow: hidden;
-        }
-        .big-message {
-          color: #fff;
-          font-size: 2.7vw;
-          margin-left: 10%;
-          margin-right: 10%;
-          text-align: left;
-          line-height: 50px;
-        }
-        .banner {
-          position: absolute;
-          width: 400px;
-          height: 100%;
-          top: 0;
-        }
-        .ad-button {
-          position: absolute;
-          top: 75%;
-          left: 10%;
-        }
-        
-        .ad-logo {
-          position: absolute;
-          width: 125px;
-          height: 125px;
-          top: 5%;
-        }
         @keyframes slideInFromLeft {
           0% {transform: translateX(-100%);opacity: 0;}
           100% {transform: translateX(0);opacity: 1;}}
@@ -252,56 +204,13 @@
           0% {opacity: 0;}
           100% {opacity: 1;}
         }
-        @media screen and (max-width:500px) {
-          .vt{
-            font-size:20px;
-            min-width:150px;
-            min-height:30px;
-          }
-          .ad-button {
-            left:2%;}
-          }
-          .header-billboard {
-            position:absolute!important;
-            top:400px;
-            left:0;
-            right:0;
+        @media screen and (max-width:767px) {
         }`;
         return styleSheet;
       },
+    };
+    fn.init();
+  }
 
-
-      scrollChange(){
-        let distance = window.scrollY;
-        console.log(distance);
-
-
-        if(distance>200 && els.scrolled){
-          fn.insertHtmlScrolledElement(creativeParams.testScrolledImg);
-          let container = els.mainDocument.querySelector("#pushdown");
-          //let button = els.mainDocument.querySelector(".ad-button");
-          //let logo = els.mainDocument.querySelector(".ad-logo");
-          //button.classList.add("collapsedButton");
-          //logo.classList.add("collapsedLogo");
-          container.classList.add("scrollFixed");
-          els.scrolled=false;
-        }if(distance==0 && !els.scrolled){
-          fn.insertHtmlElement(creativeParams.testBaseImg);
-          let container = els.mainDocument.querySelector("#pushdown");
-          //let button = els.mainDocument.querySelector(".ad-button");
-          //let logo = els.mainDocument.querySelector(".ad-logo");
-          //logo.classList.remove("collapsedLogo");
-          //button.classList.remove("collapsedButton");
-          container.classList.remove("scrollFixed");
-          els.scrolled=true;
-        }
-      }
-    }
-    
-      fn.init();
-  };
-  
-  
   window.trd_out_stream = new TRDadvertisement();
-    
 </script>
