@@ -19,7 +19,7 @@
       mainWindow: window.parent.top.window,
       scrolled: false,
     };
-    creativeParams = {
+    adProps = {
       clickThroughURL: "[%clickThroughURL%]",
       imageSrc: "[%ImageSrc%]",
       imageSrc2: "[%ImageSrc2%]",
@@ -40,9 +40,11 @@
         "https://via.placeholder.com/1900x100?text=1900x100+ScrolledImg",
       testlogoSrc: "https://via.placeholder.com/350x350?text=350x350+TestLogo",
       testbuttonColor: "blue",
+      testbuttonTextColor: "white",
       testtopHeading: "TopHeadingTestText",
       testbuttonText: "ButtonTestText",
       testtopHeadingColor: "black",
+      testtextColor: "magenta",
     };
 
     fn = {
@@ -55,9 +57,9 @@
 
         // TODO needs further testing several bugs currently exist NOTE Scroll functionality appears to be setup on new preview site.
         if (position == 0) {
-          fn.insertHtmlElement(creativeParams.testBaseImg);
+          fn.insertHtmlElement(adProps.testBaseImg);
         } else {
-          fn.insertHtmlScrolledElement(creativeParams.testScrolledImg);
+          fn.insertHtmlScrolledElement(adProps.testScrolledImg);
         }
 
         let trdHeader = els.mainDocument.querySelector("#trd-header");
@@ -75,14 +77,14 @@
         adImg.classList.add("intermission-image");
         let advertisement = `    
             <div class="full-section"> 
-                <img  class="one-fifth-section "src=${creativeParams.testlogoSrc} alt="background"/>
+                <img  class="one-fifth-section "src=${adProps.testlogoSrc} alt="background"/>
                 <div class="three-fifth-section">
-                  <h2>${creativeParams.testtopHeading}</h2>
-                  <a href="${creativeParams.testclickThroughURL}" class="">
-                      <button class="">${creativeParams.testbuttonText}</button>
+                  <h2 class="pushdown-hdg" style="color: ${adProps.testtextColor}">${adProps.testtopHeading}</h2>
+                  <a href="${adProps.testclickThroughURL}" class="pushdown-link">
+                    <button class="pushdown-btn" style="background-color: ${adProps.testbuttonColor}; color: ${adProps.testbuttonTextColor}">${adProps.testbuttonText}</button>
                   </a>
                 </div>
-                <img  class="one-fifth-section" src=${creativeParams.testlogoSrc} alt="background"/>
+                <img  class="one-fifth-section" src=${adProps.testlogoSrc} alt="background"/>
             </div>`;
         adWrapper.innerHTML = advertisement;
         return adWrapper;
@@ -106,13 +108,14 @@
 
         let billboard = `    
         <div class="full-section-scr"> 
-          <img  class="one-fifth-section"src=${creativeParams.testlogoSrc} alt="background"/>
+          <img  class="one-fifth-section"src=${adProps.testlogoSrc} alt="background"/>
           <div class="three-fifth-section">
-            <a href="${creativeParams.testclickThroughURL}" class=" ">
-              <button class="">${creativeParams.testbuttonText}</button>
+            <h2 class="pushdown-hdg" style="color: ${adProps.testtextColor}">${adProps.testtopHeading}</h2>
+            <a href="${adProps.testclickThroughURL}" class="pushdown-link">
+              <button class="pushdown-btn" style="background-color: ${adProps.testbuttonColor}">${adProps.testbuttonText}</button>
             </a>
           </div>
-          <img  class="one-fifth-section" src=${creativeParams.testlogoSrc} alt="background"/>
+          <img  class="one-fifth-section" src=${adProps.testlogoSrc} alt="background"/>
         </div>`;
         advertisement.innerHTML = billboard;
 
@@ -124,8 +127,8 @@
         let staticIntermission = els.mainDocument.querySelector(
           ".static-intermission"
         );
-        for (let i = 0; i < creativeParams.impressionTrackers.length; i++) {
-          let tracker = creativeParams.impressionTrackers[i];
+        for (let i = 0; i < adProps.impressionTrackers.length; i++) {
+          let tracker = adProps.impressionTrackers[i];
           if (tracker) {
             let impression = document.createElement("img");
             tracker = tracker.split("\n").join("").split(" ").join("");
@@ -141,7 +144,7 @@
         console.log(distance);
 
         if (distance > 200 && els.scrolled) {
-          fn.insertHtmlScrolledElement(creativeParams.testScrolledImg);
+          fn.insertHtmlScrolledElement(adProps.testScrolledImg);
           let container = els.mainDocument.querySelector("#pushdown");
           //let button = els.mainDocument.querySelector(".ad-button");
           //let logo = els.mainDocument.querySelector(".ad-logo");
@@ -151,7 +154,7 @@
           els.scrolled = false;
         }
         if (distance == 0 && !els.scrolled) {
-          fn.insertHtmlElement(creativeParams.testBaseImg);
+          fn.insertHtmlElement(adProps.testBaseImg);
           let container = els.mainDocument.querySelector("#pushdown");
           //let button = els.mainDocument.querySelector(".ad-button");
           //let logo = els.mainDocument.querySelector(".ad-logo");
@@ -165,27 +168,33 @@
       constructStyleSheet() {
         var styleSheet = document.createElement("style");
         styleSheet.innerHTML = ` 
+        .one-fifth-section {
+          display: flex!important;
+          width: 20%!important;
+        }
         .full-section {
           width:100%!important;
           display: flex!important;
-          background-image: url(${creativeParams.testbaseImg});
+          background-image: url(${adProps.testbaseImg});
           max-height: 400px;
         }
         .full-section-scr {
           width:100%!important;
           display: flex!important;
-          background-image: url(${creativeParams.testscrolledImg});
+          background-image: url(${adProps.testscrolledImg});
           max-height: 100px;
         }
-        .one-fifth-section {
-          display: flex!important;
-          width: 20%!important;
+        .pushdown-btn {
+          font-family: Arial,sans-serif;
+          font-size: 1rem;
         }
-        .three-fifth-section {
-          display: flex!important;
-          width: 60%;
-          flex-direction: column;
-          align-items: center;
+        .pushdown-hdg {
+          font-family: 'Open Sans',sans-serif;
+          font-size: 1.5rem;
+          height: 70%;
+        }
+        .pushdown-link {
+
         }
         .scrollFixed {
           position: fixed;
@@ -193,6 +202,12 @@
           width: 100%;
           margin: 0;
           z-index: 100;
+        }
+        .three-fifth-section {
+          display: flex!important;
+          width: 60%;
+          flex-direction: column;
+          align-items: center;
         }
         @keyframes slideInFromLeft {
           0% {transform: translateX(-100%);opacity: 0;}
