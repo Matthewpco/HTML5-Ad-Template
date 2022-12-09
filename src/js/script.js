@@ -1,17 +1,4 @@
-<!-- Html body for testing purposes to simulate a page with an ad container as well as padding to be able to scroll the page and initate that functionality-->
-  <body style="margin: 0; padding: 0">
-    <div id="pushdown">
-    </div>
-    <div
-      class="fat-div"
-      style="padding-bottom: 1200px; background-color: #efefef"
-    ></div>
-  </body>
-
-<!-- End html body test area, remove for production deployment -->
-
-<script>
-  function TRDadvertisement(options) {
+function TRDadvertisement(options) {
     // User defined props to be set in the Google Ad Manager creative template
     adProps = {
       backgroundImg: '',
@@ -117,7 +104,7 @@
           container.classList.remove("scrollFixed");
         }
       },
-
+      
       constructStyleSheet() {
         var styleSheet = document.createElement("style");
         styleSheet.innerHTML = ` 
@@ -176,5 +163,3 @@
   }
 
   window.trd_out_stream = new TRDadvertisement();
-
-</script>
