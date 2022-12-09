@@ -20,31 +20,27 @@
       scrolled: false,
     };
     adProps = {
-      clickThroughURL: "[%clickThroughURL%]",
-      imageSrc: "[%ImageSrc%]",
-      imageSrc2: "[%ImageSrc2%]",
-      logoSrc: "[%logo%]",
-      buttonColor: "[%buttonColor%]",
-      topHeading: "[%topHeading%]",
-      buttonText: "[%buttonText%]",
-      topHeadingColor: "[%topHeadingColor%]",
+      backgroundImg: '',
+      //"[%backgroundImg%]",
+      backgroundImgScrld: '',
+      //"[%backgroundImgScrld%]",
+      buttonColor: '',
+      //"[%buttonColor%]",
+      buttonText: '',
+      //"[%buttonText%]",
+      ctaLink: '',
+      //"[%ctaLink%]",
+      headingColor:  '',
+      //"[%headingColor%]",
+      headingText:  '',
+      //"[%headingText%]",
       impressionTrackers: [
         "[%ImpressionTracker1%]",
         "[%ImpressionTracker2%]",
         "[%ImpressionTracker3%]",
       ],
-      // Test params, replace with values above for build.
-      testclickThroughURL: "https://preview.therealdeal.com/",
-      testbaseImg: "https://via.placeholder.com/1900x400?text=1900x400+BaseImg",
-      testscrolledImg:
-        "https://via.placeholder.com/1900x100?text=1900x100+ScrolledImg",
-      testlogoSrc: "https://via.placeholder.com/350x350?text=350x350+TestLogo",
-      testbuttonColor: "blue",
-      testbuttonTextColor: "white",
-      testtopHeading: "TopHeadingTestText",
-      testbuttonText: "ButtonTestText",
-      testtopHeadingColor: "black",
-      testtextColor: "magenta",
+      logo: '',
+      //"[%logo%]",   
     };
 
     fn = {
@@ -54,16 +50,16 @@
         console.log(`position is : ${position}`);
         let style = fn.constructStyleSheet();
         container.appendChild(style);
+        //fn.insertHtmlElement();
 
         // TODO needs further testing several bugs currently exist NOTE Scroll functionality appears to be setup on new preview site.
         if (position == 0) {
-          fn.insertHtmlElement(adProps.testBaseImg);
+          fn.insertHtmlElement(adProps.backgroundImg);
         } else {
-          fn.insertHtmlScrolledElement(adProps.testScrolledImg);
+          fn.insertHtmlScrolledElement(adProps.backgroundImgScrld);
         }
-
-        let trdHeader = els.mainDocument.querySelector("#trd-header");
         els.mainWindow.addEventListener("scroll", fn.scrollChange);
+        let trdHeader = els.mainDocument.querySelector("#trd-header");
 
         // Commented out for development
         //fn.attachTrackers();
@@ -76,16 +72,16 @@
         adWrapper.classList.add("static-intermission");
         adImg.classList.add("intermission-image");
         let advertisement = `    
-            <div class="full-section"> 
-                <img  class="one-fifth-section "src=${adProps.testlogoSrc} alt="background"/>
-                <div class="three-fifth-section">
-                  <h2 class="pushdown-hdg" style="color: ${adProps.testtextColor}">${adProps.testtopHeading}</h2>
-                  <a href="${adProps.testclickThroughURL}" class="pushdown-link">
-                    <button class="pushdown-btn" style="background-color: ${adProps.testbuttonColor}; color: ${adProps.testbuttonTextColor}">${adProps.testbuttonText}</button>
-                  </a>
-                </div>
-                <img  class="one-fifth-section" src=${adProps.testlogoSrc} alt="background"/>
-            </div>`;
+        <div class="full-section"> 
+          <img  class="one-fifth-section" src=${adProps.logo || "https://via.placeholder.com/350x350?text=350x350+TestLogo"} alt="background"/>
+          <div class="three-fifth-section">
+            <h2 class="pushdown-hdg" style="color: ${adProps.headingColor || "seagreen"}">${adProps.headingText || "Default Heading Text"}</h2>
+            <a href="${adProps.ctaLink}" class="pushdown-link">
+              <button class="pushdown-btn" style="background-color: ${adProps.buttonColor}">${adProps.buttonText || "Default Button Text"}</button>
+            </a>
+          </div>
+          <img  class="one-fifth-section" src=${adProps.logo || "https://via.placeholder.com/350x350?text=350x350+TestLogo"} alt="background"/>
+        </div>`;
         adWrapper.innerHTML = advertisement;
         return adWrapper;
       },
@@ -108,14 +104,14 @@
 
         let billboard = `    
         <div class="full-section-scr"> 
-          <img  class="one-fifth-section"src=${adProps.testlogoSrc} alt="background"/>
+          <img  class="one-fifth-section" src=${adProps.logo || "https://via.placeholder.com/350x350?text=350x350+TestLogo"} alt="background"/>
           <div class="three-fifth-section">
-            <h2 class="pushdown-hdg" style="color: ${adProps.testtextColor}">${adProps.testtopHeading}</h2>
-            <a href="${adProps.testclickThroughURL}" class="pushdown-link">
-              <button class="pushdown-btn" style="background-color: ${adProps.testbuttonColor}">${adProps.testbuttonText}</button>
+            <h2 class="pushdown-hdg" style="color: ${adProps.headingColor || "seagreen"}">${adProps.headingText || "Default Heading Text"}</h2>
+            <a href="${adProps.ctaLink}" class="pushdown-link">
+              <button class="pushdown-btn" style="background-color: ${adProps.buttonColor}">${adProps.buttonText || "Default Button Text"}</button>
             </a>
           </div>
-          <img  class="one-fifth-section" src=${adProps.testlogoSrc} alt="background"/>
+          <img  class="one-fifth-section" src=${adProps.logo || "https://via.placeholder.com/350x350?text=350x350+TestLogo"} alt="background"/>
         </div>`;
         advertisement.innerHTML = billboard;
 
@@ -144,7 +140,7 @@
         console.log(distance);
 
         if (distance > 200 && els.scrolled) {
-          fn.insertHtmlScrolledElement(adProps.testScrolledImg);
+          fn.insertHtmlScrolledElement(adProps.backgroundImgScrld);
           let container = els.mainDocument.querySelector("#pushdown");
           //let button = els.mainDocument.querySelector(".ad-button");
           //let logo = els.mainDocument.querySelector(".ad-logo");
@@ -154,7 +150,7 @@
           els.scrolled = false;
         }
         if (distance == 0 && !els.scrolled) {
-          fn.insertHtmlElement(adProps.testBaseImg);
+          fn.insertHtmlElement(adProps.backgroundImg);
           let container = els.mainDocument.querySelector("#pushdown");
           //let button = els.mainDocument.querySelector(".ad-button");
           //let logo = els.mainDocument.querySelector(".ad-logo");
@@ -175,13 +171,13 @@
         .full-section {
           width:100%!important;
           display: flex!important;
-          background-image: url(${adProps.testbaseImg});
+          background-image: url(${adProps.backgroundImg || "https://via.placeholder.com/1900x400?text=1900x400+BaseImg"});
           max-height: 400px;
         }
         .full-section-scr {
           width:100%!important;
           display: flex!important;
-          background-image: url(${adProps.testscrolledImg});
+          background-image: url(${adProps.backgroundImgScrld || "https://via.placeholder.com/1900x100?text=1900x100+ScrolledImg"});
           max-height: 100px;
         }
         .pushdown-btn {
@@ -222,9 +218,11 @@
         @media screen and (max-width:767px) {
         }`;
         return styleSheet;
-      },
+      }
     };
+
     fn.init();
+    
   }
 
   window.trd_out_stream = new TRDadvertisement();
