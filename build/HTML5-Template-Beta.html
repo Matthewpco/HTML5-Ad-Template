@@ -27,6 +27,14 @@
       ],
       logo: '',
       //"[%logo%]",   
+      adScrldBoolean: false,
+      get hasAdScrld() {
+        return this.adScrldBoolean;
+      },
+      set hasAdScrld(hasAdScrld) {
+        this.adScrldBoolean = hasAdScrld
+        return this.adScrldBoolean
+      }
     };
 
     fn = {
@@ -34,24 +42,16 @@
         let container = els.mainDocument.querySelector("#pushdown");
         let position = els.mainWindow.scrollY;
         console.log(`position is : ${position}`);
+        els.mainWindow.addEventListener("scroll", fn.scrollChange);
         let style = fn.constructStyleSheet();
         container.appendChild(style);
-        //fn.insertHtmlElement();
-
-        // TODO needs further testing several bugs currently exist NOTE Scroll functionality appears to be setup on new preview site.
-        if (position == 0) {
-          fn.insertHtmlElement(adProps.backgroundImg);
-        } else {
-          fn.insertHtmlScrolledElement(adProps.backgroundImgScrld);
-        }
-        els.mainWindow.addEventListener("scroll", fn.scrollChange);
-        let trdHeader = els.mainDocument.querySelector("#trd-header");
-
-
+        fn.insertHtmlElement();
+        // Commented out for development
         fn.attachTrackers();
       },
 
-      createHtmlElement(image) {
+      // replace these 3 functions with just one to inject the starter code
+      createHtmlElement() {
         let adWrapper = document.createElement("div");
         let adImg = document.createElement("img");
         let adImgClick = document.createElement("a");
@@ -61,9 +61,9 @@
         <div class="full-section"> 
           <img  class="one-fifth-section" src=${adProps.logo || "https://via.placeholder.com/350x350?text=350x350+TestLogo"} alt="background"/>
           <div class="three-fifth-section">
-            <h2 class="pushdown-hdg" style="color: ${adProps.headingColor || "seagreen"}">${adProps.headingText || "Default Heading Text"}</h2>
+            <h2 class="pushdown-hdg" style="color: ${adProps.headingColor || "#373d3f"}">${adProps.headingText || "Default Heading Text for The Real Deal the number one real estate news business in the world."}</h2>
             <a href="${adProps.ctaLink}" class="pushdown-link">
-              <button class="pushdown-btn" style="background-color: ${adProps.buttonColor}">${adProps.buttonText || "Default Button Text"}</button>
+              <button class="pushdown-btn" style="background-color: ${adProps.buttonColor || "#f7f7f7"}">${adProps.buttonText || "Default Button Text"}</button>
             </a>
           </div>
           <img  class="one-fifth-section" src=${adProps.logo || "https://via.placeholder.com/350x350?text=350x350+TestLogo"} alt="background"/>
@@ -72,14 +72,14 @@
         return adWrapper;
       },
 
-      insertHtmlElement(image) {
+      insertHtmlElement() {
         let container = els.mainDocument.querySelector("#pushdown");
         let placeholder = container.firstElementChild;
-        let advertisement = fn.createHtmlElement(image);
+        let advertisement = fn.createHtmlElement();
         container.replaceChild(advertisement, placeholder);
       },
 
-      insertHtmlScrolledElement(creative) {
+      insertHtmlScrolledElement() {
         let container = els.mainDocument.querySelector("#pushdown");
         let placeholder = container.firstElementChild;
         let advertisement = document.createElement("div");
@@ -87,12 +87,11 @@
         let adImgClick = document.createElement("a");
         advertisement.classList.add("static-intermission");
         adImg.classList.add("intermission-image");
-
         let billboard = `    
         <div class="full-section-scr"> 
           <img  class="one-fifth-section" src=${adProps.logo || "https://via.placeholder.com/350x350?text=350x350+TestLogo"} alt="background"/>
           <div class="three-fifth-section">
-            <h2 class="pushdown-hdg" style="color: ${adProps.headingColor || "seagreen"}">${adProps.headingText || "Default Heading Text"}</h2>
+            <h2 class="pushdown-hdg" style="color: ${adProps.headingColor || "seagreen"}">${adProps.headingText || "Default Heading Text for The Real Deal the number one real estate news business in the world."}</h2>
             <a href="${adProps.ctaLink}" class="pushdown-link">
               <button class="pushdown-btn" style="background-color: ${adProps.buttonColor}">${adProps.buttonText || "Default Button Text"}</button>
             </a>
@@ -123,27 +122,23 @@
 
       scrollChange() {
         let distance = window.scrollY;
-        console.log(distance);
-
-        if (distance > 200 && els.scrolled) {
-          fn.insertHtmlScrolledElement(adProps.backgroundImgScrld);
+        //console.log(`distance is : ${distance}`);
+        // add scrld classes to heading text and button
+        if (distance > 200 && !adProps.hasAdScrld) {
+          adProps.hasAdScrld = true;
           let container = els.mainDocument.querySelector("#pushdown");
-          //let button = els.mainDocument.querySelector(".ad-button");
-          //let logo = els.mainDocument.querySelector(".ad-logo");
-          //button.classList.add("collapsedButton");
-          //logo.classList.add("collapsedLogo");
+          let imgContainer = document.querySelector(".full-section")
+          imgContainer.classList.add("full-section-scr")
+          imgContainer.classList.remove("full-section")
           container.classList.add("scrollFixed");
-          els.scrolled = false;
         }
-        if (distance == 0 && !els.scrolled) {
-          fn.insertHtmlElement(adProps.backgroundImg);
+        if (distance == 0 && adProps.hasAdScrld)  {
+          adProps.hasAdScrld = false;
+          let imgContainer = document.querySelector(".full-section-scr")
+          imgContainer.classList.add("full-section")
+          imgContainer.classList.remove("full-section-scr")
           let container = els.mainDocument.querySelector("#pushdown");
-          //let button = els.mainDocument.querySelector(".ad-button");
-          //let logo = els.mainDocument.querySelector(".ad-logo");
-          //logo.classList.remove("collapsedLogo");
-          //button.classList.remove("collapsedButton");
           container.classList.remove("scrollFixed");
-          els.scrolled = true;
         }
       },
 
@@ -169,6 +164,9 @@
         .pushdown-btn {
           font-family: Arial,sans-serif;
           font-size: 1rem;
+          border-color: #f7f7f7;
+          border-radius: 8px;
+          padding: 8px 12px 8px 12px;
         }
         .pushdown-hdg {
           font-family: 'Open Sans',sans-serif;
@@ -190,16 +188,6 @@
           width: 60%;
           flex-direction: column;
           align-items: center;
-        }
-        @keyframes slideInFromLeft {
-          0% {transform: translateX(-100%);opacity: 0;}
-          100% {transform: translateX(0);opacity: 1;}}
-        @keyframes slideInFromRight {
-          0% {transform: translateX(100%);opacity: 0;}
-          100% {transform: translateX(0);opacity: 1;}}
-        @keyframes imageShowUp {
-          0% {opacity: 0;}
-          100% {opacity: 1;}
         }
         @media screen and (max-width:767px) {
         }`;
