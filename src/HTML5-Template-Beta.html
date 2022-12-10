@@ -48,6 +48,7 @@
 
     fn = {
       init() {
+        
         // Runs once at start to construct and append the stylesheet, the dynamic ad template, and set an event listener for scroll change to operate the ad slot collapse 
         let container = document.querySelector("#pushdown");
         let style = fn.constructStyleSheet();
@@ -57,6 +58,11 @@
         // Commented out for development
         //fn.attachTrackers();
       },
+      testLoadTime() {
+        for(let i =0 ; i < 100000; i++) {
+      //operation;
+   }
+},
 
       // Selects the ad slot pushdown container , constructs an HTML ad template with the given user variables, and appends as a child to the pushdown container
       createHtmlElement() {
@@ -170,8 +176,11 @@
         return styleSheet;
       }
     };
-
+    const t0 = performance.now();
+    //fn.testLoadTime();
     fn.init();
+    const t1 = performance.now();
+    console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
     
   }
 
