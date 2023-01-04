@@ -1,4 +1,4 @@
-![](https://github.com/Matthewpco/WP-Plugin-API-Posts/blob/main/wp-plugin-restapi.jpg)
+![](https://github.com/Matthewpco/HTML5-Ad-Template/blob/main/TRD-Ad.jpg)
 
 # HTML5-Ad-Template for Google Ad Manager custom creative
 
