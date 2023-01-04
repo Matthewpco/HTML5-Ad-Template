@@ -60,10 +60,8 @@
       },
       testLoadTime() {
         for(let i =0 ; i < 100000; i++) {
-      //operation;
    }
 },
-
       // Selects the ad slot pushdown container , constructs an HTML ad template with the given user variables, and appends as a child to the pushdown container
       createHtmlElement() {
         let container = document.querySelector("#pushdown");
@@ -171,16 +169,22 @@
           flex-direction: column;
           align-items: center;
         }
-        @media screen and (max-width:767px) {
+        @media only screen and (max-width:767px) {
+          .full-section {
+            width:100%!important;
+          display: flex!important;
+          background-image: url(${adProps.backgroundImg || "https://via.placeholder.com/1900x400?text=1900x400+BaseImg"});
+          max-height: 80px!important;
+          }
         }`;
         return styleSheet;
       }
     };
-    const t0 = performance.now();
-    //fn.testLoadTime();
+
+    console.time();
+    fn.testLoadTime();
     fn.init();
-    const t1 = performance.now();
-    console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
+    console.timeEnd();
     
   }
 
