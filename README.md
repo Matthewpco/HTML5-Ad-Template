@@ -18,3 +18,5 @@ Build folder contains the single file to be minified and ran inline for the Goog
 - HTML
 - CSS
 - Google Ads
+
+![](https://github.com/Matthewpco/HTML5-Ad-Template/blob/main/TRD-Ad-2.jpg)
