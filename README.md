@@ -14,9 +14,9 @@ Build folder contains the single file to be minified and ran inline for the Goog
 
 ## 📜 Features
 
-- JavScript
-- HTML
-- CSS
-- Google Ads
+- JavaScript ES6
+- HTML 5
+- CSS 3
+- Google Ad Manager
 
 ![](https://github.com/Matthewpco/HTML5-Ad-Template/blob/main/TRD-Ad-2.jpg)
